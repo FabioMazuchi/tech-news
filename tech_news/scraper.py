@@ -3,6 +3,8 @@ def fetch(url):
     """Seu código deve vir aqui"""
 
 
+# inicio
+
 # Requisito 2
 def scrape_novidades(html_content):
     """Seu código deve vir aqui"""
