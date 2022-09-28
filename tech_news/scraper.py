@@ -1,9 +1,9 @@
 import requests
+from parsel import Selector
 from time import sleep
 
+
 # Requisito 1
-
-
 def fetch(url):
     try:
         sleep(1)
@@ -19,7 +19,11 @@ def fetch(url):
 
 # Requisito 2
 def scrape_novidades(html_content):
-    """Seu código deve vir aqui"""
+    selector = Selector(html_content)
+    links = []
+    for link in selector.css("article.entry-preview"):
+        links.append(link.css("a.cs-overlay-link::attr(href)").get())
+    return links
 
 
 # Requisito 3
