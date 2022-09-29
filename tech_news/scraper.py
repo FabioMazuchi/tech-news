@@ -31,12 +31,21 @@ def scrape_next_page_link(html_content):
     return Selector(html_content).css("a.next::attr(href)").get()
 
 
-# print(scrape_next_page_link(fetch("https://blog.betrybe.com/")))
-
-
 # Requisito 4
 def scrape_noticia(html_content):
-    """Seu código deve vir aqui"""
+    sel = Selector(html_content)
+    p = sel.css("div.entry-content > p:nth-of-type(1) *::text").getall()
+    sumary = "".join(p)
+    return {
+        "url": sel.css("head link[rel=canonical]::attr(href)").get(),
+        "title": str(sel.css("h1.entry-title::text").get()).strip(),
+        "timestamp": sel.css(".meta-date::text").get(),
+        "writer": sel.css("span.author > a::text").get(),
+        "comments_count": len(sel.css(".comment-list > li").getall()) or 0,
+        "summary": sumary.strip(),
+        "tags": sel.css("section.post-tags > ul > li > a::text").getall(),
+        "category": sel.css("a.category-style span.label::text").get(),
+    }
 
 
 # Requisito 5
