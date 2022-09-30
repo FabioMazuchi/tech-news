@@ -68,6 +68,3 @@ def get_tech_news(amount):
     create_news(noticias)
 
     return noticias
-
-
-get_tech_news(3)
