@@ -12,12 +12,16 @@ def search_by_title(title):
 
 # Requisito 7
 def search_by_date(date):
-    """Seu código deve vir aqui"""
+    pass
 
 
 # Requisito 8
 def search_by_tag(tag):
-    """Seu código deve vir aqui"""
+    response = search_news({"tags": {"$regex": tag, "$options": "i"}})
+    result = []
+    for r in response:
+        result.append((r["title"], r["url"]))
+    return result
 
 
 # Requisito 9
