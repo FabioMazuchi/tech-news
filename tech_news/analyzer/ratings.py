@@ -1,14 +1,21 @@
+from pymongo import MongoClient, ASCENDING, DESCENDING
+from decouple import config
+
+DB_HOST = config("DB_HOST", default="localhost")
+DB_PORT = config("DB_PORT", default="27017")
+
+client = MongoClient(host=DB_HOST, port=int(DB_PORT))
+db = client.tech_news
+
+
 # Requisito 10
-from tech_news.database import find_news
-
-
 def top_5_news():
-    noticias = find_news()
-    # https://pt.stackoverflow.com/questions/371321/itemgetter-ordenar-lista-de-dicion%C3%A1rios-python
-    ordered = sorted(
-        noticias,
-        key=lambda row: (row["comments_count"], row["title"]),
-        reverse=1,
+    # https://stackoverflow.com/questions/8109122/how-to-sort-mongodb-with-pymongo
+    # https://stackoverflow.com/questions/29604573/how-to-limit-mongo-query-in-python
+    ordered = list(
+        db.news.find({}, {"_id": False})
+        .sort([("comments_count", DESCENDING), ("title", ASCENDING)])
+        .limit(5)
     )
 
     result = []
@@ -16,9 +23,8 @@ def top_5_news():
         for o in ordered:
             result.append((o["title"], o["url"]))
     else:
-        for c in range(5):
-            result.append((ordered[c]["title"], ordered[c]["url"]))
-            c += 1
+        for o in ordered:
+            result.append((o["title"], o["url"]))
     return result
 
 
