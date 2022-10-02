@@ -10,8 +10,6 @@ db = client.tech_news
 
 # Requisito 10
 def top_5_news():
-    # https://stackoverflow.com/questions/8109122/how-to-sort-mongodb-with-pymongo
-    # https://stackoverflow.com/questions/29604573/how-to-limit-mongo-query-in-python
     ordered = list(
         db.news.find({}, {"_id": False})
         .sort([("comments_count", DESCENDING), ("title", ASCENDING)])
@@ -30,4 +28,17 @@ def top_5_news():
 
 # Requisito 11
 def top_5_categories():
-    """Seu código deve vir aqui"""
+    lista = list(
+        db.news.aggregate(
+            [
+                {"$group": {"_id": "$category", "res": {"$sum": 1}}},
+                {"$sort": {"res": -1, "_id": 1}},
+                {"$limit": 5},
+            ]
+        )
+    )
+    result = []
+    for lis in lista:
+        result.append(lis["_id"])
+
+    return result
